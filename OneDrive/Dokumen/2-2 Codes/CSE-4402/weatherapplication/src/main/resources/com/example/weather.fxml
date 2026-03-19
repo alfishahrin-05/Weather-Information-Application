@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.ColumnConstraints?>
+
+<!-- Main ScrollPane to make entire application scrollable -->
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.WeatherController">
+<VBox spacing="25.0">
+   <children>
+      <!-- Header Section -->
+      <VBox fx:id="headerSection" spacing="15" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-background-radius: 15; -fx-padding: 25;">
+         <children>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+               <!-- Fixed weather dashboard icon -->
+               <Label text="⛅ Weather Dashboard" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" HBox.hgrow="ALWAYS" />
+               <!-- Fixed light mode icon - using simple sun character -->
+               <Button fx:id="themeToggleButton" text="☀ Dark Mode" onAction="#toggleTheme" 
+                       style="-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: rgba(255,255,255,0.3); -fx-border-width: 1;" />
+            </HBox>
+            
+            <!-- Enhanced Search Section -->
+            <HBox spacing="10" alignment="CENTER">
+               <TextField fx:id="cityField" promptText="🔍 Search for any city..." HBox.hgrow="ALWAYS" 
+                         style="-fx-background-color: rgba(255,255,255,0.9); -fx-background-radius: 25; -fx-padding: 12; -fx-font-size: 14px; -fx-border-radius: 25;" />
+               <Button fx:id="searchButton" text="Search" 
+                       style="-fx-background-color: #ff6b6b; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 25; -fx-padding: 12 20; -fx-font-size: 14px;" />
+            </HBox>
+            
+            <HBox alignment="CENTER">
+               <ProgressIndicator fx:id="loadingIndicator" progress="-1" prefWidth="25" prefHeight="25" 
+                                 style="-fx-progress-color: white;" />
+            </HBox>
+            <Label fx:id="errorLabel" style="-fx-text-fill: #ffcccb; -fx-font-weight: bold; -fx-font-size: 14px;" visible="false" />
+         </children>
+         <effect>
+            <DropShadow radius="15" offsetY="5" color="rgba(0,0,0,0.3)" />
+         </effect>
+      </VBox>
+      
+      <!-- Current Weather Card -->
+      <VBox fx:id="currentWeatherCard" spacing="20" style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 30; -fx-border-color: #e0e0e0; -fx-border-radius: 20; -fx-border-width: 1;">
+         <children>
+            <HBox alignment="CENTER_LEFT" spacing="15">
+               <Label text="📍" style="-fx-font-size: 24px;" />
+               <Label fx:id="currentCityLabel" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+            </HBox>
+            
+            <HBox spacing="40" alignment="CENTER">
+               <!-- Temperature Display -->
+               <VBox spacing="8" alignment="CENTER">
+                  <Label fx:id="currentTempLabel" style="-fx-font-size: 48px; -fx-font-weight: bold; -fx-text-fill: #ff6b6b;" />
+                  <Label fx:id="feelsLikeLabel" style="-fx-font-size: 14px; -fx-text-fill: #666666;" />
+                  <Label fx:id="timeLabel" style="-fx-font-size: 12px; -fx-text-fill: #999999; -fx-font-style: italic;" />
+               </VBox>
+               
+               <!-- Weather Details Grid -->
+               <GridPane hgap="25" vgap="15" alignment="CENTER">
+                  <columnConstraints>
+                     <ColumnConstraints minWidth="120" />
+                     <ColumnConstraints minWidth="120" />
+                  </columnConstraints>
+                  
+                  <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                     <Label text="💧 Humidity" style="-fx-font-size: 12px; -fx-text-fill: #999999; -fx-font-weight: bold;" />
+                     <Label fx:id="humidityLabel" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4ecdc4;" />
+                  </VBox>
+                  
+                  <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                     <Label text="☁ Cloud Cover" style="-fx-font-size: 12px; -fx-text-fill: #999999; -fx-font-weight: bold;" />
+                     <Label fx:id="cloudLabel" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #95a5a6;" />
+                  </VBox>
+                  
+                  <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                     <!-- Fixed precipitation icon -->
+                     <Label text="🌧 Precipitation" style="-fx-font-size: 12px; -fx-text-fill: #999999; -fx-font-weight: bold;" />
+                     <Label fx:id="precipitationLabel" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #3498db;" />
+                  </VBox>
+                  
+                  <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <!-- Fixed air quality icon -->
+                     <Label text="🌬 Air Quality" style="-fx-font-size: 12px; -fx-text-fill: #999999; -fx-font-weight: bold;" />
+                     <Label fx:id="aqiLabel" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #e74c3c;" />
+                  </VBox>
+               </GridPane>
+            </HBox>
+         </children>
+         <effect>
+            <DropShadow radius="12" offsetY="4" color="rgba(0,0,0,0.1)" />
+         </effect>
+      </VBox>
+      
+      <!-- Forecast Section with increased size -->
+      <VBox fx:id="forecastSection" spacing="15" style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 25; -fx-border-color: #e0e0e0; -fx-border-radius: 20; -fx-border-width: 1; -fx-min-height: 300;">
+         <children>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+               <Label text="📅" style="-fx-font-size: 20px;" />
+               <Label text="3-Days Forecast" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+            </HBox>
+            <!-- Increased scroll pane size -->
+            <ScrollPane fx:id="forecastScrollPane" prefHeight="250" maxHeight="250" 
+                       style="-fx-background: transparent; -fx-background-color: transparent;">
+               <VBox fx:id="forecastBox" spacing="12" />
+            </ScrollPane>
+         </children>
+         <effect>
+            <DropShadow radius="12" offsetY="4" color="rgba(0,0,0,0.1)" />
+         </effect>
+      </VBox>
+      
+      <!-- History Section with increased size -->
+      <VBox fx:id="historySection" spacing="15" style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 25; -fx-border-color: #e0e0e0; -fx-border-radius: 20; -fx-border-width: 1; -fx-min-height: 450;">
+         <children>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+               <Label text="📈" style="-fx-font-size: 20px;" />
+               <Label text="Last 7 Days Weather History" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+            </HBox>
+            <!-- Increased scroll pane size -->
+            <ScrollPane fx:id="historyScrollPane" prefHeight="400" maxHeight="400" 
+                       style="-fx-background: transparent; -fx-background-color: transparent;">
+               <VBox fx:id="historyBox" spacing="12" />
+            </ScrollPane>
+         </children>
+         <effect>
+            <DropShadow radius="12" offsetY="4" color="rgba(0,0,0,0.1)" />
+         </effect>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+   </padding>
+</VBox>
+</ScrollPane>
