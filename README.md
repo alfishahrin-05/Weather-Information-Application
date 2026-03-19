@@ -178,7 +178,4 @@ This project is open-source and available under the MIT License. See the LICENSE
 
 For issues, questions, or suggestions, please open an issue on [GitHub Issues](https://github.com/alfishahrin-05/Weather-Information-Application/issues).
 
----
 
-**Last Updated**: March 2026
-**Status**: Active Development
